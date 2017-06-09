@@ -278,10 +278,10 @@ int main(int argc, char* argv[]){
 		}
 
 		else if (particle == "BOSONS"){
-			EnergyDensityDM = 0.5*MPI*MPI*GCHIb*GCHIb*pow(BaryonDensity,2.)/pow((MPI*MPI + GCHIb*GCHIb*DMDensity), 2.)
-			+ 0.5*DMmass*DMmass*DMDensity
-			+ pow(GCHIb, 4.)*pow(BaryonDensity,2.)*DMDensity/pow((MPI*MPI + GCHIb*GCHIb*DMDensity), 2.)
-			+ LAMBDACHIb/24. * DMDensity*DMDensity;
+			EnergyDensityDM = 0.5*MPI*MPI*GCHIb*GCHIb*pow(BaryonDensity,2.)/pow((MPI*MPI + GCHIb*GCHIb*DMDensity/DMmass), 2.)
+			+ 0.5*DMmass*DMDensity
+			+ pow(GCHIb, 4.)*pow(BaryonDensity,2.)*DMDensity/(DMmass*pow((MPI*MPI + GCHIb*GCHIb*DMDensity/DMmass), 2.))
+			+ LAMBDACHIb/24. * DMDensity*DMDensity/pow(DMmass,2.);
 
 			PressureDM = 0.5*MPI*MPI*GCHIb*GCHIb*pow(BaryonDensity,2.)/pow((MPI*MPI + GCHIb*GCHIb*DMDensity), 2.)
 			+ 0.5*DMmass*DMmass*DMDensity
