@@ -11,15 +11,15 @@ the particle in question is a boson or fermion (acutally, this file is indisting
 is simply the MR sequence of a model without any DM). After this "benchmark" MR sequence is generated, it is used by the DmNo.cc 
 to calculate the number of DM particles as a function of time classified by Mass, Radius, and central density of a star. Two 
 types of files are generated from this:
-    nchi[ABCD]pFAT.dat
-    nchi[ABCD]pSKINNY.dat
+    * nchi[ABCD]pFAT.dat
+    * nchi[ABCD]pSKINNY.dat
 where,
-    A = coefficient of DM-nucleon cross-section
-    B = absolute value of the power of DM-nucleon cross-section
-    C = absolute value of the power of DM-DM cross-section
-    D = DM mass
-    FAT corresponds to a file with information for all NS masses and radii as well as all times
-    SKINNY corrsponds to a file with information for all NS masses and radii but at a fixed time
+    * A = coefficient of DM-nucleon cross-section
+    * B = absolute value of the power of DM-nucleon cross-section
+    * C = absolute value of the power of DM-DM cross-section
+    * D = DM mass
+    * FAT corresponds to a file with information for all NS masses and radii as well as all times
+    * SKINNY corrsponds to a file with information for all NS masses and radii but at a fixed time
 so, for instance, if you want to see the number of particles captured in all stars in a given sequence as a function of time for
 fermionic DM that has a DM-nucleon cross section of 1x10^(-55) cm^2, a DM-DM cross section of 10^-24 cm^2 and a mass of 1 GeV,
 you would look at the file "/FERMIONS/DmNoFiles/1GeV/nchi155241pFAT.dat". If you wanted this for a specific time, specified in
@@ -28,8 +28,8 @@ the source code of DmNo.cc, you would look in "/FERMIONS/DmNoFiles/1GeV/nchi1552
 # 2. EoSDM.cc:
 This code uses the outputs from DmNo.cc to calculate the effect that the captured DM would have on the EoS of dense nuclear
 matter. It takes in either of the two files (using the "SKINNY" version for speed at the moment) and outputs:
-    EoS_SigOmDM_[ABCD]p.dat
-    SigOm[ABCD]p.dat
+    * EoS_SigOmDM_[ABCD]p.dat
+    * SigOm[ABCD]p.dat
 using the same naming convention as above. Using the same example as above, the outputs for this can be found in
 "FERMIONS/EoSFiles/1GeV/EoS_SigOmDM_155241p.dat". The first file contains the minimum relevant information for calculating the
 MR sequence by solving the TOV equations, including the energy density, the pressure, the baryon density, and the DM parameters
@@ -43,38 +43,37 @@ This code takes the output from EoSDM.cc and calculates a modified MR sequence. 
 the previous code and calculates the stable NS masses and radii, thereby forming a sequence of stars that have been affected by
 DM. This is the final desired output, because these are the relevant NS observbables that will allow us to constrian the theory. 
 The output of this file is an MR sequence that includes DM capture by the star:
-    MR_[ABCD]p.dat
+    * MR_[ABCD]p.dat
 using the same naming convention as above. With the same example, you can find this modified MR sequence in
 "FERMIONS/MRFiles/1GeV/MR_155241p.dat"
 # ============================================================================================================================
 
 These codes must be run sequentially to get a sensible output. For this purpose, a python script for each type of DM model has 
 been writtten. These are called:
-    bigscriptBOSONS.py
-    bigscriptFERMIONS.py
+    * bigscriptBOSONS.py
+    * bigscriptFERMIONS.py
 These scripts take in as argument the range of coefficients to the DM-nucleon cross section, the range of powers to the DM-
 nucleon cross-section, the power of the DM-DM cross sections, and the range of DM masses for which you want to run the above
 sequence of codes, with the following syntax:
-    python bigscriptFERMIONS.py A B C D E F G
+    * python bigscriptFERMIONS.py A B C D E F G
 where,
-    A = lower bound on coefficient to DM-nucleon cross section
-    B = upper bound on coefficient to DM-nucleon cross section
-    C = upper bound on (absolute value of) power to DM-nucleon cross section
-    D = lower bound on (absolute value of) power to DM-nucleon cross section
-    E = (absolute value of) power to DM self-interaction cross section
-    F = lower bound on DM mass
-    G = upper bound on DM mass
+    * A = lower bound on coefficient to DM-nucleon cross section
+    * B = upper bound on coefficient to DM-nucleon cross section
+    * C = upper bound on (absolute value of) power to DM-nucleon cross section
+    * D = lower bound on (absolute value of) power to DM-nucleon cross section
+    * E = (absolute value of) power to DM self-interaction cross section
+    * F = lower bound on DM mass
+    * G = upper bound on DM mass
 So, for instance, if you want to find the effect that a fermionic DM particle has on the mass and radius of a NS if its nucleon
 cross section is in the range of (1x10^-50) to (1x1o^-55) cm^2 and its self-interaction cross section is (10^-24) cm^2 and its
 mass is in the range 1-10 GeV, you would run the script
-    python bigscriptFERMIONS.py 1 10 50 56 24 1 11
+    * python bigscriptFERMIONS.py 1 10 50 56 24 1 11
 This whole region of parameter space will take about 7 hours to run on a single core (of course, this depends on the power of
 the machine used to run it). I am in the process of parallelizing the code to increase efficiency, but at the moment one can
 simply run the code for smaller regions of parameter space in tandem. For example, the same region of parameter space can be
 scanned in approximately 1.5 hrs if 5 cores are used for the following five scripts
-    python bigscriptFERMIONS.py 1 10 50 56 24 1 3
-    python bigscriptFERMIONS.py 1 10 50 56 24 3 5
-    python bigscriptFERMIONS.py 1 10 50 56 24 5 7
-    python bigscriptFERMIONS.py 1 10 50 56 24 7 9
-    python bigscriptFERMIONS.py 1 10 50 56 24 9 11
-    
+    * python bigscriptFERMIONS.py 1 10 50 56 24 1 3
+    * python bigscriptFERMIONS.py 1 10 50 56 24 3 5
+    * python bigscriptFERMIONS.py 1 10 50 56 24 5 7
+    * python bigscriptFERMIONS.py 1 10 50 56 24 7 9
+    * python bigscriptFERMIONS.py 1 10 50 56 24 9 11
