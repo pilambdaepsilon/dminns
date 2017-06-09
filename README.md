@@ -20,6 +20,8 @@ where,
 * D = DM mass
 * FAT corresponds to a file with information for all NS masses and radii as well as all times
 * SKINNY corrsponds to a file with information for all NS masses and radii but at a fixed time
+
+
 so, for instance, if you want to see the number of particles captured in all stars in a given sequence as a function of time for
 fermionic DM that has a DM-nucleon cross section of 1x10^(-55) cm^2, a DM-DM cross section of 10^-24 cm^2 and a mass of 1 GeV,
 you would look at the file "/FERMIONS/DmNoFiles/1GeV/nchi155241pFAT.dat". If you wanted this for a specific time, specified in
