@@ -13,6 +13,7 @@ to calculate the number of DM particles as a function of time classified by Mass
 types of files are generated from this:
 * nchi[ABCD]pFAT.dat
 * nchi[ABCD]pSKINNY.dat
+
 where,
 * A = coefficient of DM-nucleon cross-section
 * B = absolute value of the power of DM-nucleon cross-section
@@ -31,6 +32,7 @@ This code uses the outputs from DmNo.cc to calculate the effect that the capture
 matter. It takes in either of the two files (using the "SKINNY" version for speed at the moment) and outputs:
 * EoS_SigOmDM_[ABCD]p.dat
 * SigOm[ABCD]p.dat
+
 using the same naming convention as above. Using the same example as above, the outputs for this can be found in
 "FERMIONS/EoSFiles/1GeV/EoS_SigOmDM_155241p.dat". The first file contains the minimum relevant information for calculating the
 MR sequence by solving the TOV equations, including the energy density, the pressure, the baryon density, and the DM parameters
@@ -45,6 +47,7 @@ the previous code and calculates the stable NS masses and radii, thereby forming
 DM. This is the final desired output, because these are the relevant NS observbables that will allow us to constrian the theory. 
 The output of this file is an MR sequence that includes DM capture by the star:
 * MR_[ABCD]p.dat
+
 using the same naming convention as above. With the same example, you can find this modified MR sequence in
 "FERMIONS/MRFiles/1GeV/MR_155241p.dat"
 # ============================================================================================================================
@@ -53,10 +56,12 @@ These codes must be run sequentially to get a sensible output. For this purpose,
 been writtten. These are called:
 * bigscriptBOSONS.py
 * bigscriptFERMIONS.py
+
 These scripts take in as argument the range of coefficients to the DM-nucleon cross section, the range of powers to the DM-
 nucleon cross-section, the power of the DM-DM cross sections, and the range of DM masses for which you want to run the above
 sequence of codes, with the following syntax:
 * python bigscriptFERMIONS.py A B C D E F G
+
 where,
 * A = lower bound on coefficient to DM-nucleon cross section
 * B = upper bound on coefficient to DM-nucleon cross section
@@ -65,10 +70,12 @@ where,
 * E = (absolute value of) power to DM self-interaction cross section
 * F = lower bound on DM mass
 * G = upper bound on DM mass
+
 So, for instance, if you want to find the effect that a fermionic DM particle has on the mass and radius of a NS if its nucleon
 cross section is in the range of (1x10^-50) to (1x1o^-55) cm^2 and its self-interaction cross section is (10^-24) cm^2 and its
 mass is in the range 1-10 GeV, you would run the script
 * python bigscriptFERMIONS.py 1 10 50 56 24 1 11
+
 This whole region of parameter space will take about 7 hours to run on a single core (of course, this depends on the power of
 the machine used to run it). I am in the process of parallelizing the code to increase efficiency, but at the moment one can
 simply run the code for smaller regions of parameter space in tandem. For example, the same region of parameter space can be
