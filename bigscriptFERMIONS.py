@@ -3,6 +3,10 @@ import sys
 import time
 
 to = time.time()
+def subprocess_cmd(command):
+    process = subprocess.Popen(command,stdout=subprocess.PIPE, shell=True)
+    proc_stdout = process.communicate()[0].strip()
+    print proc_stdout
 
 startit = int(sys.argv[1])
 endit = int(sys.argv[2])
@@ -19,6 +23,10 @@ powstrchi2 = str(sigchi2pow)
 
 for m in range (int(startmass), int(endmass)):
     mstr = str(m)
+    subprocess_cmd('if [ ! -d \"FERMIONS/DmNoFiles/%sGeV\" ]; then echo "CREATING DIRECTORY FERMIONS/DmNoFiles/%sGeV..."; mkdir \"FERMIONS/DmNoFiles/%sGeV\"; fi' %(mstr,mstr,mstr))
+    subprocess_cmd('if [ ! -d \"FERMIONS/EoSFiles/%sGeV\" ]; then echo "CREATING DIRECTORY FERMIONS/EoSFiles/%sGeV..."; mkdir \"FERMIONS/EoSFiles/%sGeV\"; fi' %(mstr,mstr,mstr))
+    subprocess_cmd('if [ ! -d \"FERMIONS/MRFiles/%sGeV\" ]; then echo "CREATING DIRECTORY FERMIONS/MRFiles/%sGeV..."; mkdir \"FERMIONS/MRFiles/%sGeV\"; fi' %(mstr,mstr,mstr))
+
     for SIGCHIN in range (int(startsigchinpow), int(endsigchinpow)):
         SIGCHINstr = str(SIGCHIN)
         print("sigchin: %s"%SIGCHINstr)
