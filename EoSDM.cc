@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
 //	cout << '\n' << '\n' << "WHAT SHALL WE CALL THIS FILE?: "; cin >> fno;
 //	cout << '\n' << "WHAT IS THE FILENAME OF THE NUMBER DENSITY FILE? - Naming convention is [55241] for SIGCHIN~-55, SIGCHI2~-24, MDM~ 1: "; cin >> fno2;
 	int calls = 1000;
-	string particle = "BOSONS";
+	string particle = "FERMIONS";
 
 	stringstream liltitle1a;
 	stringstream liltitle1b;
@@ -68,10 +68,11 @@ int main(int argc, char* argv[]){
 		columns = col.size();
 	}
 
+	cout << "DMmass: " << DMmass << '\n';
 	int rows = NCHIDATA.size();
 	dater.close();
 
-	cout << "rows: " << rows << " columns: " << columns << '\n';
+//	cout << "rows: " << rows << " columns: " << columns << '\n';
 
 
 	double maxtimeforNS = NCHIDATA[rows-1][0];
@@ -81,7 +82,7 @@ int main(int argc, char* argv[]){
 	double DMDensity = 0;//PARAMSET[DMTimeSlice][2];			//fm^-3
 	double dummyscannB = 0;
 	double dummyscanT =0;
-	cout << NSage << " years" << '\n' << '\n';
+//	cout << NSage << " years" << '\n' << '\n';
 	
 	while (BaryonDensity <= 1.6){
 		AlphaAsymmetry = 0.;
@@ -90,7 +91,7 @@ int main(int argc, char* argv[]){
 			double relerrDENS = fabs(dummyscannB - BaryonDensity)/max(dummyscannB, BaryonDensity);
 			if(relerrDENS <= 5e-3){
 				DMDensity = NCHIDATA[scan][1];
-				cout << BaryonDensity << " " << dummyscannB << " " << DMDensity << '\n';
+				//cout << BaryonDensity << " " << dummyscannB << " " << DMDensity << '\n';
 			}
 		}
 		
@@ -283,10 +284,10 @@ int main(int argc, char* argv[]){
 			+ pow(GCHIb, 4.)*pow(BaryonDensity,2.)*DMDensity/(DMmass*pow((MPI*MPI + GCHIb*GCHIb*DMDensity/DMmass), 2.))
 			+ LAMBDACHIb/24. * DMDensity*DMDensity/pow(DMmass,2.);
 
-			PressureDM = 0.5*MPI*MPI*GCHIb*GCHIb*pow(BaryonDensity,2.)/pow((MPI*MPI + GCHIb*GCHIb*DMDensity), 2.)
-			+ 0.5*DMmass*DMmass*DMDensity
-			+ pow(GCHIb, 4.)*pow(BaryonDensity,2.)*DMDensity/pow((MPI*MPI + GCHIb*GCHIb*DMDensity), 2.)
-			+ LAMBDACHIb/24. * DMDensity*DMDensity;
+			PressureDM = 0.5*MPI*MPI*GCHIb*GCHIb*pow(BaryonDensity,2.)/pow((MPI*MPI + GCHIb*GCHIb*DMDensity/DMmass), 2.)
+			+ 0.5*DMmass*DMDensity
+			+ pow(GCHIb, 4.)*pow(BaryonDensity,2.)*DMDensity/(DMmass*pow((MPI*MPI + GCHIb*GCHIb*DMDensity/DMmass), 2.))
+			+ LAMBDACHIb/24. * DMDensity*DMDensity/pow(DMmass, 2.);
 		}
 
 		EnergyDensity += EnergyDensityDM;
@@ -313,10 +314,12 @@ int main(int argc, char* argv[]){
 			" " << MstarXiZero/MeVtoinvFM << " " << XiZeroDensity << " " << 
 			(Exi0)/MeVtoinvFM << '\n'; 
 
-		DATERclean << BaryonDensity << " " << EnergyDensity/MeVtoinvFM << " " << Pressure/MeVtoinvFM << " " << SIGCHIN*1e-26 << " " << SIGCHI2*1e-26 << " " 
-			<< DMmass*1e-3/MeVtoinvFM << '\n';
+		if (isfinite(EnergyDensity) and isfinite(Pressure)){
+			DATERclean << BaryonDensity << " " << EnergyDensity/MeVtoinvFM << " " << Pressure/MeVtoinvFM << " " << SIGCHIN*1e-26 << " " << SIGCHI2*1e-26 << " " 
+				<< DMmass*1e-3/MeVtoinvFM << '\n';
+		}
 
-		if(BaryonDensity >= 0.999*0.153 && BaryonDensity <= 1.0001*0.153){
+/*		if(BaryonDensity >= 0.999*0.153 && BaryonDensity <= 1.0001*0.153){
 			cout << BaryonDensity << " " << EnergyDensity << " " << BindingPerNucleon/MeVtoinvFM << " " << '\n';
 			print_state2(iter2, S2);
 			cout << "status2 = " << gsl_strerror(status2) << '\n';
@@ -335,7 +338,7 @@ int main(int argc, char* argv[]){
 
 				
 		}
-
+*/
 
 		gsl_multiroot_fsolver_free(S2);			//CLEAR MEMORY
 		gsl_vector_free(y);				//ON EVERYTHING

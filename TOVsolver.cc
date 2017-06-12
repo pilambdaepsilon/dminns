@@ -208,7 +208,7 @@ int main(int argc, char* argv[]){
 	ss << title1 << title2 << title3 << title4;
 	string fnos = ss.str();
 
-	string particle = "BOSONS";
+	string particle = "FERMIONS";
 	stringstream liltitle1;
 	liltitle1 <<"./" << particle << "/EoSFiles/"<<title4<<"GeV/EoS_SigOmDM_"<<fnos<<"p.dat";
 	string	BIGTITLE1 = liltitle1.str();

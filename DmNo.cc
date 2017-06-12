@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
 	int title4 = atoi(argv[4]);
 	int fno;
 	string fnos;
-	string particle = "BOSONS";
+	string particle = "FERMIONS";
 	cout << "DM-Nucleon cross-section[order, cm^2]: ";
 	cout << '\n' << '\n' << "FILENUMBER - Naming convention is [55241] for SIGCHIN~-55, SIGCHI2~-24, MDM~ 1: ";
 
@@ -300,7 +300,7 @@ while (CoreDens <= FinalCoreDens){
 		double Volumechi = 4./3. *pi * pow(Rchi, 3.);
 		double DMDENS = DMNO/(Volumechi);			//DM number density in inverse fm^3
 		double relerrTIME = fabs(TIME - NSAGE)/max(TIME,NSAGE);
-		if (DMNO >=0.){
+		if (isfinite(DMNO) and isfinite(DMDENS)){
 			myfile << TIME << " " << DMNO << " " << DMDENS*1e-39*pow(convGeVtoinvcm,3.) << " " << CoreDens*1e-39*pow(convGeVtoinvcm,3.) << " " 
 			<< SIGCHIN << " " << SIGCHI2 << " " << DMmass << '\n';
 			if (relerrTIME <= 5e-2){
