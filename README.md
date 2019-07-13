@@ -1,4 +1,4 @@
-# dminns:
+# dminns by Pedro L. Espino:
 This set of codes allows the calculation of the effect of simplified models of dark matter (DM) on the equation of state (EoS) 
 of a netron star (NS). There are three main codes, DmNo.cc, EoSDM.cc, and TOVsolver.cc, along with their corresponding header 
 files.
