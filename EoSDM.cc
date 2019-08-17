@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
 //	cout << '\n' << '\n' << "WHAT SHALL WE CALL THIS FILE?: "; cin >> fno;
 //	cout << '\n' << "WHAT IS THE FILENAME OF THE NUMBER DENSITY FILE? - Naming convention is [55241] for SIGCHIN~-55, SIGCHI2~-24, MDM~ 1: "; cin >> fno2;
 	int calls = 1000;
-	string particle = "FERMIONS";
+	string particle = "BOSONS";
 
 	stringstream liltitle1a;
 	stringstream liltitle1b;

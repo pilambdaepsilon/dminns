@@ -17,9 +17,10 @@ const double TDM = TNS;
 const double vbar = 220e5*convcmtoinvGeV/convstoinvGeV;					// mean thermal DM speed in cm/s->fraction of c - MB distrib
 const double v2 = vbar*vbar;									// the square pops up more frequently
 const double Nmass = 0.938;								// Neutron mass in GeV
-double rhoDM = 0.;						// GeV/cm^3 -> GeV^4 - mean DM density at 1 kpc from Galactic center
+double rhoDM = 0.47259/pow(convcmtoinvGeV,3.);						// GeV/cm^3 -> GeV^4 - mean DM density at 1 kpc from Galactic center
 
-double pFermi = 0;									// Fermi momentum, neutrons, in GeV
+//double pFermi = Planckbar*pow((3*pi*pi*CoreDens), 1./3.)/clight;//GeV
+const double pFermi = 0.426;									// Fermi momentum, neutrons, in GeV
 const double T1 = 3.5;									// containment time	
 const double TMAX = 1e10;
 
@@ -74,10 +75,11 @@ double Nchitherm(double mDM, double mred, double thermtime, double time, double 
 	double radtherm = sqrt(9.* TNS/(4.*pi*GNewton0*CDens*Nmass*mDM));
 	return (Cc + Cs*pi*pow(radtherm, 2)/(sigchi2*pow(convcmtoinvGeV,2.) ) )* time;
 }
-double PauliBlocking(double mred, double pFerm, double Mns, double Rns){
+double PauliBlocking(double mred, double Mns, double Rns){
 	double xi = 2.* sqrt(GNewton0*Mns/Rns)*mred;
-	xi *= 1./pFerm;
 	if (xi < 1.){
 		return xi;}
 	else{ return 1.;}
 }
+
+

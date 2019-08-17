@@ -27,13 +27,13 @@ double SCANMAX;
 //double mstar = 0.75*mass;					// effective mass
 //const double asymm = 32.5*MeVtoinvFM;				// symmetry energy coefficient (fm^-1)
 //const double BperA = -16.3*MeVtoinvFM;				// Binding energy (fm^-1)
+const double MPI = 90e3*MeVtoinvFM;
 double Pi = pi;
 struct Rparams{
 	double Msig; double Mw;	double Mr; double Mn; double Me; double gs; double gw; double gr;
 	double bethe; double cethe; double nB; double Easymm; double Kcompress; double BperA;	double gamma; double asymmetryfactor;
 	double Mlambda; double xHadronomega; double xHadronsigma; double xHadronrho; double Mmu; 
-	double Mximinus; double Msigmaminus; double Msigmazero; double Msigmaplus; double Mxizero; 
-	double DMDens; double GchibDM; double MpiDM; double MchiDM; double LambdaDM;
+	double Mximinus; double Msigmaminus; double Msigmazero; double Msigmaplus; double Mxizero;
 };
 /*===============================================================================================================
 ================================= functions to be integrated ====================================================
@@ -92,16 +92,16 @@ double Gpi(double sigchin, double mn, double mchi, double mpi, double gchi){
 }
 
 double Gchib(double sigchin, double mn, double mchi, double mpi){
-	double arg = pi*sigchin* pow((mn + mchi),2.)*pow(mpi,4.)/pow(mn*mchi,2.);
+	double arg = pi*sigchin* pow((mn + mchi),2.)*pow(mpi,4.)/( mn*mchi);
 	return pow(arg, 0.25);
+}
+double Gpib(double sigchin, double mn, double mchi, double mpi){
+	double arg = sqrt( sigchin*mn*mn*1000/(pow(mchi,4.)) ) * mpi*mpi;
+	return sqrt(arg);
 }
 double Lambdachi(double sigchi2, double mchi){
 	double arg = sqrt(sigchi2*mchi*mchi*64*M_PI);
-	return arg;
-}
-double Mpib(double sigchin, double mn, double mchi){
-	double arg = pow(mn*mchi,2.)/(pow(mn + mchi,2.)*pi*sigchin);
-	return pow(arg, 0.25);
+	return sqrt(arg);
 }
 
 

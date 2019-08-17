@@ -83,15 +83,10 @@ int main(int argc, char* argv[]){
 	fnos = ss.str();
 	cout << fnos << '\n';
 
-	stringstream liltitle;
 	stringstream liltitle2;
-	liltitle << "./" << particle << "/DmNoFiles/" << title4 << "GeV/nchi" << fnos << "pFAT.dat";
 	liltitle2 << "./" << particle << "/DmNoFiles/" << title4 << "GeV/nchi" << fnos << "pSKINNY.dat";
-	string BIGTITLE = liltitle.str();
 	string BIGTITLE2 = liltitle2.str();
-	ofstream myfile;						//my file
 	ofstream myfile2;						//my file
-	myfile.open(string(BIGTITLE));
 	myfile2.open(string(BIGTITLE2));
 	double TIME = 10;
 	double DMNO = 0;
@@ -301,8 +296,6 @@ while (CoreDens <= FinalCoreDens){
 		double DMDENS = DMNO/(Volumechi);			//DM number density in inverse fm^3
 		double relerrTIME = fabs(TIME - NSAGE)/max(TIME,NSAGE);
 		if (isfinite(DMNO) and isfinite(DMDENS)){
-			myfile << TIME << " " << DMNO << " " << DMDENS*1e-39*pow(convGeVtoinvcm,3.) << " " << CoreDens*1e-39*pow(convGeVtoinvcm,3.) << " " 
-			<< SIGCHIN << " " << SIGCHI2 << " " << DMmass << '\n';
 			if (relerrTIME <= 5e-2){
 				myfile2 << TIME << " " << DMNO << " " << DMDENS*1e-39*pow(convGeVtoinvcm,3.) << " " << CoreDens*1e-39*pow(convGeVtoinvcm,3.) << " " 
 				<< SIGCHIN << " " << SIGCHI2 << " " << DMmass << '\n';
@@ -317,7 +310,6 @@ while (CoreDens <= FinalCoreDens){
 	CoreDens *= 1.01;
 	timevec.clear();
 	}
-	myfile.close();
 	myfile2.close();
 	MRDATA.clear();
 	return 0;
