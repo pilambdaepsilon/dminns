@@ -1,0 +1,8 @@
+star=NGC6304
+distance_Earth=6.22
+distance_GC=2.3
+age=1e10
+DMdensity=2.85238
+# The NGC 6304 is a Globular Cluster located approximately 6.22 kpc from us. 
+# It's approximate age is 10^10 years.
+# SOURCE: 

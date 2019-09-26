@@ -1,0 +1,9 @@
+star=4U1820-30
+distance_Earth=7.6
+distance_GC=1.2
+age=1e10
+DMdensity=6.18439
+# The star 4U18203 is in the Globular Cluster NGC 6624, located 
+# approximately 7.6 kpc from us. The globular cluster itself is 
+# approximately 12 Gigayears old, so we approximate the stellar
+# age at about 10^10 years. SOURCE: arXiv 1611.06988

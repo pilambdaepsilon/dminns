@@ -1,0 +1,8 @@
+star=OmegaCentauri
+distance_Earth=4.59
+distance_GC=6.4
+age=1e10
+DMdensity=0.685529
+# The Omega Centauri is a Globular Cluster located approximately 4.59 kpc from us. 
+# It's approximate age is 10^10 years.
+# SOURCE: 

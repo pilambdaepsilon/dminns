@@ -1,0 +1,10 @@
+star=4U1608-52
+distance_Earth=7.4
+distance_GC=1
+age=1e9
+DMdensity=7.59588
+# The star 4U 1608-52 lies in the Milky Way disk, and is located 
+# approximately 7.4 kpc from us. We could not find a source with the star's 
+# approximate age, so we are taking a conservative guess of 10^9 years old.
+# SOURCE: 
+# * I haven't calculated the distance to the GC...

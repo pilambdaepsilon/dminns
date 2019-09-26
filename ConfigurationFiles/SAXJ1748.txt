@@ -1,0 +1,8 @@
+star=SAXJ1748.9-2021
+distance_Earth=8.2
+distance_GC=1.3
+age=2.5e8
+DMdensity=5.64324
+# The star SAX J1748.9-2021 is in the Globular Cluster NGC 6440, located 
+# approximately 8.2 kpc from us. The star is approximately 0.25 Gigayears old
+# SOURCE: ApJ 675: 670-682 (2008)

@@ -1,0 +1,9 @@
+star=M28
+distance_Earth=5.5
+distance_GC=2.7
+age=1e10
+DMdensity=2.32751
+# The M28 is a Globular Cluster located approximately 5.5 kpc from us. 
+# It's approximate age is 10^10 years.
+# SOURCE: 
+

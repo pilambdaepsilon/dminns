@@ -1,0 +1,8 @@
+star=NGC6397
+distance_Earth=2.51
+distance_GC=6.0
+age=1e10
+DMdensity=0.75794
+# The NGC 6397 is a Globular Cluster located approximately 2.51 kpc from us. 
+# It's approximate age is 10^10 years.
+# SOURCE: 

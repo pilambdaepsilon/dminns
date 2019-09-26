@@ -1,0 +1,10 @@
+star=EXO1745-248
+distance_Earth=6.3
+distance_GC=1.3
+age=1e10
+DMdensity=5.64324
+# The star EXO 1745-248 is in the Globular Cluster Terzan 5, located 
+# approximately 6.3 kpc from us. The cluster itself is approximately
+# 11 Gigayears old SOURCE, so we place the star at approximately 10^10
+# years old. SOURCE: arXiv: 0912.0192
+

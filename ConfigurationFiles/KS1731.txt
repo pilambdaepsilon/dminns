@@ -1,0 +1,10 @@
+star=KS1731-260
+distance_Earth=8
+distance_GC=1
+age=1e9
+DMdensity=7.59588
+# The star KS 1731-260 is in the direction of Baade's Window, making it observable.
+# It is approximately near the center of the Milky Way, at about 8 kpc from us and 1
+# kpc from the GC. We could not find a source with the star's approximate age, so we
+# are taking a conservative guess of 10^9 years old.
+# SOURCE: arXiv: 1104.5027
