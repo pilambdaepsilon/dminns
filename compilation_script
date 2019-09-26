@@ -1,0 +1,1 @@
+g++ -I/usr/local/include -L/usr/local/lib -lgsl -lgslcblas -lm SourceCode/DmNo.cc -o DMNOt
