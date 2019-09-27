@@ -7,6 +7,7 @@ int main(int argc, char* argv[]){
 	double title4 = atof(argv[4]);
 	string STAR = argv[5];
 	string EoSMODEL = argv[6];
+        string particle = argv[7];
 
 /*====================== TAKE IN CONFIGURATION FILE TO GET STAR AND MODEL DETAILS ==========================*/
 	string starname; double dNS_Earth; double dNS_GC; double NSage; double DMAmbientDensity;
@@ -52,7 +53,6 @@ int main(int argc, char* argv[]){
 	cout << '\n' << "fno: " << fno << '\n';
 	
 	int calls = 1000;
-	string particle = "BOSONS";
 
 	stringstream liltitle1b;
 	liltitle1b << "./" << particle << "/EoSFiles/" << title4 << "GeV/EoS_SigOmDM_" << fno << "p.dat";

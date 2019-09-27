@@ -191,6 +191,7 @@ int main(int argc, char* argv[]){
 	double title4 = atof(argv[4]);
 	string STAR = argv[5];
 	string EoSMODEL = argv[6];
+        string particle = argv[7];
 	stringstream ss;
 	ss << title1 << title2 << title3 << title4;
 	string fnos = ss.str();
@@ -198,7 +199,6 @@ int main(int argc, char* argv[]){
 /*==============================================================================
 ============================ READ IN AND FIT EoS FILES USING INTERPOLATOR ======
 * =============================================================================*/
-	string particle = "BOSONS";
 	stringstream liltitle1;
 	liltitle1 <<"./" << particle << "/EoSFiles/"<<title4<<"GeV/EoS_SigOmDM_"<<fnos<<"p.dat";
 

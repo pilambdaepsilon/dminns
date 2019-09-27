@@ -6,6 +6,7 @@ int main(int argc, char* argv[]){
 	double title3 = atof(argv[3]);
 	double title4 = atof(argv[4]);
 	string STAR = argv[5];
+        string particle = argv[6];
 /*====================== TAKE IN CONFIGURATION FILE TO GET STAR AND MODEL DETAILS ==========================*/
 	string starname; double dNS_Earth; double dNS_GC; double NSage; double DMAmbientDensity;
 
@@ -47,7 +48,6 @@ int main(int argc, char* argv[]){
 	string fno = ss.str();
 	
 	int calls = 1000;
-	string particle = "BOSONS";
 
 	stringstream liltitle1a;
 	stringstream liltitle1b;

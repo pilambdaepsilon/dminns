@@ -164,6 +164,7 @@ int main(int argc, char* argv[]){
 
 	string STAR = argv[5];
 	string EoSMODEL = argv[6];
+        string particle = argv[7];
 	stringstream ss;
 	stringstream ss2;
 	ss << title1 << title2 << title3 << title4;
@@ -172,7 +173,6 @@ int main(int argc, char* argv[]){
 /*==============================================================================
 ============================ READ IN AND FIT EoS FILES USING INTERPOLATOR ======
 * =============================================================================*/
-	string particle = "FERMIONS";
 	stringstream liltitle1;
 	liltitle1 <<"./" << particle << "/EoSFiles/"<<title4<<"GeV/EoS_SigOmDM_"<<fnos<<"p.dat";
 

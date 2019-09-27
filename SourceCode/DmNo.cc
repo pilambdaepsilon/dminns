@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
 	double DMmass = atof(argv[4]);
 	string STAR = argv[5];
 	string EoSMODEL = argv[6];
+	string particle = argv[7];
 
 	double title1 = atof(argv[1]);
 	double title2 = atof(argv[2]);
@@ -25,7 +26,7 @@ int main(int argc, char* argv[]){
 	double title4 = atof(argv[4]);
 	int fno;
 	string fnos;
-	string particle = "BOSONS";
+//	string particle = "BOSONS";
 /*====================== TAKE IN CONFIGURATION FILE TO GET STAR AND MODEL DETAILS ==========================*/
 	string starname; double dNS_Earth; double dNS_GC; double NSage;
 
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]){
 	double pr1, pr2, pr3, pr4;
 	ifstream dater;
 	stringstream liltitle1;
-	liltitle1 << "./" << "/MRSequences/MR_" << EoSMODEL << ".dat";
+	liltitle1 << "./" << "MRSequences/MR_" << EoSMODEL << ".dat";
 
 	string BIGTITLE1 = liltitle1.str();
 	dater.open(BIGTITLE1);
