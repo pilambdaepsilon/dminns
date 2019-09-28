@@ -24,9 +24,9 @@ endmass = sys.argv[7]
 STARNAME = sys.argv[8]
 MODELNAME = sys.argv[9]
 
-massinc = sys.argv[10]
+PARTICLE = sys.argv[10]
 
-PARTICLE = sys.argv[11]
+massinc = sys.argv[11]
 
 powstrchi2 = str(sigchi2pow)
 #m = float(startmass)
