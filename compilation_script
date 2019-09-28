@@ -1,4 +1,3 @@
 g++ -I/usr/local/include -L/usr/local/lib SourceCode/DmNo.cc -lgsl -lgslcblas -lm -o exe/DMNumberDensity
 g++ -I/usr/local/include -L/usr/local/lib SourceCode/EoSDMOM.cc -lgsl -lgslcblas -lm -o exe/DMEquationOfState
-g++ -I/usr/local/include -L/usr/local/lib SourceCode/TOVsolverLITE.cc -lgsl -lgslcblas -lm -o exe/DMMassRadius
-g++ -I/usr/local/include -L/usr/local/lib SourceCode/TOVsolver.cc -lgsl -lgslcblas -lm -o exe/TOVfull
+g++ -I/usr/local/include -L/usr/local/lib SourceCode/TOVsolver.cc -lgsl -lgslcblas -lm -o exe/DMTOV
