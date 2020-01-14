@@ -1,0 +1,8 @@
+star=M13
+distance_Earth=7.1
+distance_GC=8.4
+age=1e10
+DMdensity=0.440513
+# The M13 is the Globular Cluster located approximately 7.1 kpc from us. 
+# It's approximate age is 10^10 years.
+# SOURCE: 

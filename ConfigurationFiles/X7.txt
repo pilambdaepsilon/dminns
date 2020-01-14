@@ -1,0 +1,9 @@
+star=X7
+distance_Earth=7.4
+distance_GC=0.8
+age=1e9
+DMdensity=9.72092
+# The star X5 is in the Globular Cluster Terzan 2, located 
+# approximately 7.4 kpc from us. We could not find a source with the star's 
+# approximate age, so we are taking a conservative guess of 10^9 years old.
+# SOURCE: spider.seds.org/mwGC/ter02.html

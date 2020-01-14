@@ -1,0 +1,10 @@
+star=M30
+distance_Earth=9.0
+distance_GC=7.1
+age=1e10
+DMdensity=0.581214
+# The M30 is a Globular Cluster located approximately 7.1 kpc from us. 
+# It's approximate age is 10^10 years.
+# SOURCE: 
+
+
