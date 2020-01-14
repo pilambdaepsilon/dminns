@@ -1,0 +1,3 @@
+./DMEOS 0.05 100
+f=0.05; mDM=100; echo $f $mDM; ./DMTOV EOS_APR.dat 0.1 1.3 100 $f EOSDM_0.05_100_9.801e-27.dat | tee MRDM_$f; cat MRDM_$f | grep "nB M R DM:" | sed s'/nB M R DM:  //' > 'MRDM_'$f'_'$mDM
+
