@@ -6,6 +6,9 @@
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_integration.h>
 #include <gsl/gsl_math.h>
+#include <gsl/gsl_vector.h>
+//#include <gsl/gsl_multiroots.h>
+#include <gsl/gsl_roots.h>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -47,6 +50,34 @@ gsl_interp_accel *acc_PofnB_DM = gsl_interp_accel_alloc();
 gsl_spline *spline_PofnB_DM;
 
 int check_which_EOS = 0;
+//          _..._
+//        .'     '.
+//       / \     / \
+//      (  |     |  )
+//      (`"`  "  `"`)
+//       \         /
+//        \  ___  /
+//         '.___.'
+struct Rparams{
+	double dm_mass;
+	double dm_coupling_eta;
+	double central_dm_density;
+	double schwarzschild_component;
+};
+double DM_DENSITY_PROFILE(double NX, void *params){
+	//SET PARAMETERS
+	double dm_mass = ((struct Rparams *) params)->dm_mass;
+	double dm_coupling_eta = ((struct Rparams *) params)->dm_coupling_eta;
+	double central_dm_density = ((struct Rparams *) params)->central_dm_density;
+	double schwarzschild_component = ((struct Rparams *) params)->schwarzschild_component;
+	double central_dm_chempot = sqrt(dm_mass*dm_mass + pow(3*pi*pi * central_dm_density, 2./3));
+//	cout << "PARAMS: " << dm_mass << " " << dm_coupling_eta << " " << central_dm_density << " " << schwarzschild_component << '\n';
+	//SET VARIABLES TO BE SOLVED FOR
+	//SET FUNCTIONS TO BE SOLVED
+	double f0 = (sqrt(dm_mass*dm_mass + pow(3*pi*pi* NX,2./3)) + dm_coupling_eta * NX - central_dm_chempot*sqrt(schwarzschild_component));
+	
+	return f0;
+}
 //Make a struct to hold the results of m(r) and r from profile
 typedef struct{ double m; double r;} tov_results;
 /*=======================================================
@@ -68,7 +99,7 @@ int tov_rhs(const double r, const double y[], double f[], void * params){
 	double p    = y[0];									//the pressure is one of the integration variables
         double m    = y[1];									//the mass is the other integration variable
 	double p_DM = y[2];									//the pressure is one of the integration variables
-	cout << "prhs: " << p << " " << p_DM << '\n';
+//	cout << "prhs: " << p << " " << p_DM << '\n';
 	if(p < 0.0){
 		p = 0.0;
 	}
@@ -84,11 +115,12 @@ int tov_rhs(const double r, const double y[], double f[], void * params){
 	double eps=0.0;										//initialize the energy density
 	//if DM flag is on, then use the DM (+nuclear) EOS to specify the energy density
         if(DMFLAG==1){
-		eps = gsl_spline_eval(spline_EofP_DM,p,acc_EofP_DM);
 //		cout << eps << " " << p << '\n';
 		if(VERBOSE ==1 and check_which_EOS == 0){
 			cout << "DM EOS \n";check_which_EOS ++;
 		}
+		eps = gsl_spline_eval(spline_EofP,p,acc_EofP);
+//		eps = gsl_spline_eval(spline_EofP_DM,p,acc_EofP_DM);
 	}
 	//otherwise use the nuclear EOS
 	else{
@@ -333,6 +365,7 @@ int main(int argc, char* argv[]){
 	}
 	while (Density <= DensityMax){
                 double lowlim= 0.0;
+                double kFermiDM = pow((3*pi*pi *CentralDMDensity*1e39*pow(convinvcmtoGeV,3.0)), (1./3.));	//the Fermi momentum depends on the (specified) central density in GeV
 		lowlim = gsl_spline_eval(spline_PofnB, Density, acc_PofnB)*1e-10;					//the lower limit in the pressure is p_atm = 10^-10 p_c
 //		cout << "P: " << PRESS[0] << '\n';
         //        double lowlim= PRESS[0];					//the lower limit in the pressure is p_atm = 10^-10 p_c
@@ -345,7 +378,7 @@ int main(int argc, char* argv[]){
 		//print
 		if((results.r*1e-3 >=0.0) and (results.r*1e-3<=200)){
 			myfile2 << results.m << " " << results.r*1e-3 << " " << Density << '\n';
-//	               	cout << "NUC: " << Density << " " << results.m << " " << results.r*1e-3 << '\n';
+	               	cout << "NUC: " << Density << " " << results.m << " " << results.r*1e-3 << '\n';
 		}
 
 		int array_size = M_OF_R_NUC.size();									//get the size of M_OF_R_NUC
@@ -355,17 +388,49 @@ int main(int argc, char* argv[]){
 		//==== GET RADIAL PROFILES OF NB, NCHI  =======
 		// ==========================================
                 for(int i = 0; i <  array_size; i++){
-                        double kFermiDM = pow((3*pi*pi *CentralDMDensity*1e39*pow(convinvcmtoGeV,3.0)), (1./3.));	//the Fermi momentum depends on the (specified) central density
-			double gtt = 1.0 -  (2.0*GNewton/(clight*clight)) * M_OF_R_NUC[i][1]*Msolar/M_OF_R_NUC[i][0];    // 00 component of metric in mks
-                        double DMchempot = sqrt(kFermiDM*kFermiDM + DMmass*DMmass);					//the DM chemical potential
+			double gtt = 1.0 -  (2.0*GNewton/(clight*clight)) * M_OF_R_NUC[i][1]*Msolar/M_OF_R_NUC[i][0];    // 00 component of metric in mks (actually unitless)
+                        double DMchempot = sqrt(kFermiDM*kFermiDM + DMmass*DMmass);					//the DM chemical potential in GeV
 			double nb_aux = M_OF_R_NUC[i][2];
-                        double nchiofr = DMchempot * (gtt) * (1./eta) * pow(convGeVtoinvcm,3.0)*1e-39;
+                        double nchiofr = DMchempot * (1./sqrt(gtt)) * (1./eta) * pow(convGeVtoinvcm,3.0)*1e-39;
+//======================= SET NCHIOFR USING NEWTON-RAPHSON =============================
+			const gsl_root_fsolver_type *T;		//DECLARE VARIABLE FOR TYPE OF SOLVER
+			gsl_root_fsolver *S;		//DECLARE NAME FOR SOLVER WORKSPACE
+			int status;				//USED TO UPDATE ON STATUS (IS ACTUALLY BOOLEAN)
+			size_t iter =0;
+			const size_t n = 2;			//DIMENSIONALITY OF PROBLEM
+			struct Rparams p = {DMmass, eta, CentralDMDensity*1e39*pow(convinvcmtoGeV,3.0), gtt};		//INITIALIZE PARAMETERS
+			gsl_function func; func.function = &DM_DENSITY_PROFILE; func.params=&p;	//MAKE A FUNCTION FOR SOLVER OUT OF ROSENBROCK, OF DIMENSION n, WITH PARAMS p
+
+			double x_lo = 0.0, x_hi = 5.0;
+	
+			T = gsl_root_fsolver_brent;	//MAKE THE TYPE OF SOLVER A HYBRID S SOLVER
+			S = gsl_root_fsolver_alloc(T);	//MAKE THE WORKSPACE FOR SOLVER TYPE T OF DIMENSION 2
+			gsl_root_fsolver_set (S, &func, x_lo, x_hi);
+
+			double rootie_tootie = 0;
+			while(status = GSL_CONTINUE && iter < 1000){
+				iter ++;
+//				print_state(iter, S);				//PRINT THE CURRENT STATUS
+			        status = gsl_root_fsolver_iterate(S);
+				rootie_tootie = gsl_root_fsolver_root(S);
+				x_lo = gsl_root_fsolver_x_lower (S);
+				x_hi = gsl_root_fsolver_x_upper (S);
+				status = gsl_root_test_interval (x_lo, x_hi, 0, 0.001);
+//				printf ("%5d [%.7f, %.7f] %.7f %+.7f %.7f\n", iter, x_lo, x_hi, r, r - CentralDMDensity, x_hi - x_lo);
+	
+			}
+
+//			cout << "status = " << gsl_strerror(status) << " " << rootie_tootie << '\n';
+			nchiofr = rootie_tootie/(1e39*pow(convinvcmtoGeV,3.0));
+			gsl_root_fsolver_free(S);			//CLEAR MEMORY
+//======================= SET NCHIOFR USING NEWTON-RAPHSON =============================
 			//ensure monotonicity in the baryon density
 			//if(1.1*M_OF_R_NUC[i][2] < nbdumb && nb_aux > 0.0){
 			if(1.1*M_OF_R_NUC[i][2] < nbdumb){
 				//push the profiles into the vectors
 				NB_OF_R.push_back(nb_aux); NCHI_OF_R.push_back(nchiofr); R.push_back(M_OF_R_NUC[i][0]*1e-3);
-//				cout << M_OF_R_NUC[i][0]*1e-3 << " " << M_OF_R_NUC[i][1] << " " << M_OF_R_NUC[i][2] << " " << nchiofr << " " << M_OF_R_NUC[i][3] << " " << 1.0/sqrt(1.0 - (2.0*GNewton/(clight*clight)) * M_OF_R_NUC[i][1]*Msolar/M_OF_R_NUC[i][0]) << '\n';
+				//print: Radius                          Mass                     nB                         nX                pressure                    gtt 
+				cout << M_OF_R_NUC[i][0]*1e-3 << " " << M_OF_R_NUC[i][1] << " " << M_OF_R_NUC[i][2] << " " << nchiofr << " " << M_OF_R_NUC[i][3] << " " << 1.0/sqrt(1.0 - (2.0*GNewton/(clight*clight)) * M_OF_R_NUC[i][1]*Msolar/M_OF_R_NUC[i][0]) << '\n';
 				nbdumb = nb_aux;
 			}
 		}
@@ -405,58 +470,63 @@ int main(int argc, char* argv[]){
 		//=====================================================
 		//===== CREATE A NEW EOS - MODIFIED BY DM TERMS =======
 		// ====================================================
-/*
-		vector <double> PDM; vector <double> EDM; vector <double> NBDM;						//make vectors in which to hold the new EOS
-                double DensityAux = NBARR[1];										//a dummy variable for baryon density
-		double del_DensityAux = pow((Density/DensityAux), 1./10.0);
-//		cout << "DAUX: " << DensityAux << " " << del_DensityAux << " " << BDENS[0] << '\n';
-		double P_nuc = 0.0; double E_nuc = 0.0; double Ptot = 0.0; double Etot = 0.0; double DMDensity = 0.0;
-                PDM.push_back(0.0); EDM.push_back(0.0); NBDM.push_back(0.0);	
-//		cout << DensityAux << " " << E_nuc << " " << Etot << '\n';
-                while(DensityAux < Density){
-			//get the DM density from the baryon density in fm^-3
-                        DMDensity = gsl_spline_eval(spline_nChiofnB, NBARR[0], acc_nChiofnB) * 1e39*pow(convinvcmtoGeV,3.0);
-			//get the nuclear and DM EOSs
-                        P_nuc = gsl_spline_eval(spline_PofnB, DensityAux, acc_PofnB);
-			E_nuc = gsl_spline_eval(spline_EofP, P_nuc, acc_EofP);
-			Ptot = P_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39);	//MeV/fm^3
-			Etot = E_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39);	//MeV/fm^3
-//			cout << DensityAux << " " << E_nuc << " " << Etot << '\n';
-			//push back the new EOS into vectors
-                        PDM.push_back(Ptot); EDM.push_back(Etot); NBDM.push_back(DensityAux);	
-			DensityAux *= 1.001;
-		}
-                DMDensity = gsl_spline_eval(spline_nChiofnB, NBARR[0], acc_nChiofnB) * 1e39*pow(convinvcmtoGeV,3.0);
-                P_nuc = gsl_spline_eval(spline_PofnB, Density, acc_PofnB); E_nuc = gsl_spline_eval(spline_EofP, P_nuc, acc_EofP);
-		Ptot = P_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39);	//MeV/fm^3
-		Etot = E_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39);	//MeV/fm^3
-//		cout << Density << " " << E_nuc << " " << Etot << '\n';
-		//push back the new EOS into vectors
-                PDM.push_back(Ptot); EDM.push_back(Etot); NBDM.push_back(Density);	
-		//copy the new EOS into arrays for interpolation
-		double BDENS_DM[PDM.size()]; double ENDENS_DM[PDM.size()]; double PRESS_DM[PDM.size()];
-		for(int i = 0; i < PDM.size(); i++){
-			BDENS_DM[i] = NBDM[i]; ENDENS_DM[i] = EDM[i]; PRESS_DM[i] = PDM[i];
-//			cout << i << " " << BDENS_DM[i] << " " << ENDENS_DM[i] << " " << PRESS_DM[i] << '\n';
-		}
-		//interpolate the new EOS in the same way as the nuclear EOS
-		spline_EofP_DM = gsl_spline_alloc(gsl_interp_linear, PDM.size());
-		gsl_spline_init (spline_EofP_DM, PRESS_DM, ENDENS_DM, PDM.size());
-		spline_PofnB_DM = gsl_spline_alloc(gsl_interp_linear, PDM.size());
-		gsl_spline_init (spline_PofnB_DM, BDENS_DM, PRESS_DM, PDM.size());
-//		cout << "PCHDM: " << gsl_spline_eval(spline_PofnB_DM, BDENS_DM[100], acc_PofnB_DM) << " " << BDENS_DM[PDM.size() - 1] << '\n';
-		Density = BDENS_DM[PDM.size() - 1];
-		NBDM.clear(); PDM.clear(); EDM.clear();
-		//====================================================
-		//===== SOLVE THE TOV EQUATIONS WITH THE NEW EOS =======
-		//===================================================
-                use_DMEOS = 1;
-		check_which_EOS = 0;
-		tov_solver_solve(&results, Density, lowlim, use_DMEOS);
-*/
+//
+//		vector <double> PDM; vector <double> EDM; vector <double> NBDM;						//make vectors in which to hold the new EOS
+//                double DensityAux = NBARR[1];										//a dummy variable for baryon density
+//		double del_DensityAux = pow((Density/DensityAux), 1./10.0);
+////		cout << "DAUX: " << DensityAux << " " << del_DensityAux << " " << BDENS[0] << '\n';
+//		double P_nuc = 0.0; double E_nuc = 0.0; double Ptot = 0.0; double Etot = 0.0; double DMDensity = 0.0;
+//		double P_kinDM = 0.0; double E_kinDM = 0.0;
+//                PDM.push_back(0.0); EDM.push_back(0.0); NBDM.push_back(0.0);	
+////		cout << DensityAux << " " << E_nuc << " " << Etot << '\n';
+//                while(DensityAux < Density){
+//			//get the DM density from the baryon density in fm^-3
+//                        DMDensity = gsl_spline_eval(spline_nChiofnB, NBARR[0], acc_nChiofnB) * 1e39*pow(convinvcmtoGeV,3.0);
+//			//get the nuclear and DM EOSs
+//                        P_nuc = gsl_spline_eval(spline_PofnB, DensityAux, acc_PofnB);
+//			E_nuc = gsl_spline_eval(spline_EofP, P_nuc, acc_EofP);
+//			P_kinDM = 1./(3*Pi*Pi)*Int_eyeP(0, kFermiDM, DMmass, 1000);	//using integral definition of P_kin
+//			E_kinDM = 1./(Pi*Pi)*eye2(kFermiDM, DMmass);			//using analytic result for E_kin
+//			Ptot = P_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39) + P_kinDM;	//MeV/fm^3
+//			Etot = E_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39) + E_kinDM;	//MeV/fm^3
+////			cout << DensityAux << " " << E_nuc << " " << Etot << '\n';
+//			//push back the new EOS into vectors
+//                        PDM.push_back(Ptot); EDM.push_back(Etot); NBDM.push_back(DensityAux);	
+//			DensityAux *= 1.001;
+//		}
+//                DMDensity = gsl_spline_eval(spline_nChiofnB, NBARR[0], acc_nChiofnB) * 1e39*pow(convinvcmtoGeV,3.0);
+//		P_kinDM = 1./(3*Pi*Pi)*Int_eyeP(0, kFermiDM, DMmass, 1000);	//using integral definition of P_kin
+//		E_kinDM = 1./(Pi*Pi)*eye2(kFermiDM, DMmass);			//using analytic result for E_kin
+//                P_nuc = gsl_spline_eval(spline_PofnB, Density, acc_PofnB); E_nuc = gsl_spline_eval(spline_EofP, P_nuc, acc_EofP);
+//		Ptot = P_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39) + P_kinDM;	//MeV/fm^3
+//		Etot = E_nuc + 0.5*eta*DMDensity*DMDensity * (1e3*pow(convGeVtoinvcm,3.0)*1e-39) + E_kinDM;	//MeV/fm^3
+////		cout << Density << " " << E_nuc << " " << Etot << '\n';
+//		//push back the new EOS into vectors
+//                PDM.push_back(Ptot); EDM.push_back(Etot); NBDM.push_back(Density);	
+//		//copy the new EOS into arrays for interpolation
+//		double BDENS_DM[PDM.size()]; double ENDENS_DM[PDM.size()]; double PRESS_DM[PDM.size()];
+//		for(int i = 0; i < PDM.size(); i++){
+//			BDENS_DM[i] = NBDM[i]; ENDENS_DM[i] = EDM[i]; PRESS_DM[i] = PDM[i];
+////			cout << i << " " << BDENS_DM[i] << " " << ENDENS_DM[i] << " " << PRESS_DM[i] << '\n';
+//		}
+//		//interpolate the new EOS in the same way as the nuclear EOS
+//		spline_EofP_DM = gsl_spline_alloc(gsl_interp_linear, PDM.size());
+//		gsl_spline_init (spline_EofP_DM, PRESS_DM, ENDENS_DM, PDM.size());
+//		spline_PofnB_DM = gsl_spline_alloc(gsl_interp_linear, PDM.size());
+//		gsl_spline_init (spline_PofnB_DM, BDENS_DM, PRESS_DM, PDM.size());
+////		cout << "PCHDM: " << gsl_spline_eval(spline_PofnB_DM, BDENS_DM[100], acc_PofnB_DM) << " " << BDENS_DM[PDM.size() - 1] << '\n';
+//		Density = BDENS_DM[PDM.size() - 1];
+//		NBDM.clear(); PDM.clear(); EDM.clear();
+//		//====================================================
+//		//===== SOLVE THE TOV EQUATIONS WITH THE NEW EOS =======
+//		//===================================================
+//                use_DMEOS = 1;
+//		check_which_EOS = 0;
+//		tov_solver_solve(&results, Density, lowlim, use_DMEOS);
+//
 		if((results.r*1e-3 >=0.0) and (results.r*1e-3<=200)){
 			myfile2 << results.m << " " << results.r*1e-3 << " " << Density << '\n';
-                	cout << "DM:  " << Density << " " << results.m << " " << results.r*1e-3 << '\n';
+//                	cout << "DM:  " << Density << " " << results.m << " " << results.r*1e-3 << '\n';
 		}
 		if (results.m < 0.0){
 			myfile2 << 0 << " " << 0 << " " << Density << " " << pr4 << " " << pr5 << " " << pr6 << '\n';
