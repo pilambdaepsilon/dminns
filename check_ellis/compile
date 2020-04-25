@@ -1,5 +1,0 @@
-g++ -I/usr/local/include -L/usr/local/lib EoSDM_ellis.cc -lgsl -lgslcblas -lm -o DMEOS
-#g++ -I/usr/local/include -L/usr/local/lib TOVsolver_DM.cc -lgsl -lgslcblas -lm -o DMTOV
-g++ -I/usr/local/include -L/usr/local/lib TOVsolver_DM_BKP.cc -lgsl -lgslcblas -lm -o DMTOV
-g++ -I/usr/local/include -L/usr/local/lib TOVsolver_DM_two_fluid.cc -lgsl -lgslcblas -lm -o DMTOV_two_fluid
-g++ -I/usr/local/include -L/usr/local/lib TOVsolver_standalone.cc -lgsl -lgslcblas -lm -o TOV
